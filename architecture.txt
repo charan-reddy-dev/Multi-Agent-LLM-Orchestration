@@ -1,0 +1,113 @@
+ARCHITECTURE DIAGRAM
+          Real-Time Multi-Agent LLM Orchestration System
+══════════════════════════════════════════════════════════════════
+
+  CLIENT (Browser / curl / SDK)
+       │
+       │  POST /query  (SSE stream)
+       ▼
+  ┌─────────────────────────────────────────────────────────────┐
+  │                    FastAPI  (port 8000)                      │
+  │  /query  /trace/{id}  /eval/latest  /approve-rewrite        │
+  │  /eval/rerun-failed  /eval/trigger  /meta/propose-rewrite   │
+  └─────────────────────┬───────────────────────────────────────┘
+                        │
+                        ▼
+  ┌─────────────────────────────────────────────────────────────┐
+  │               MASTER ORCHESTRATOR AGENT                      │
+  │  • Dynamic routing via LLM reasoning (not hardcoded)        │
+  │  • Logs every routing decision with justification           │
+  │  • Mediates ALL inter-agent handoffs                        │
+  │  • Manages tool calls with retry logic (≤2 retries)        │
+  │  • Monitors context budgets → triggers compression          │
+  └──┬──────────┬──────────┬──────────┬──────────┬─────────────┘
+     │          │          │          │          │
+     ▼          ▼          ▼          ▼          ▼
+  ┌──────┐  ┌──────┐  ┌──────┐  ┌──────┐  ┌──────────┐
+  │DECOMP│  │RETRVL│  │CRITQ │  │SYNTH │  │COMPRESS  │
+  │AGENT │  │AGENT │  │AGENT │  │AGENT │  │AGENT     │
+  └──┬───┘  └──┬───┘  └──┬───┘  └──┬───┘  └────┬─────┘
+     │          │          │          │           │
+     │  SubTask │  Multi-  │ Per-claim│ Provenance│ Lossy/
+     │  +Deps   │  Hop RAG │ Scores   │ Map       │ Lossless
+     │          │  ≥2 hops │          │           │ Compress
+     │          │          │          │           │
+     └──────────┴──────────┴──────────┴───────────┘
+                        │
+                        ▼
+          ┌─────────────────────────┐
+          │   SHARED CONTEXT OBJECT  │
+          │  (SharedContext schema)  │
+          │  • subtasks + dep graph  │
+          │  • messages (all agents) │
+          │  • claims + confidence   │
+          │  • tool_calls log        │
+          │  • provenance_map        │
+          │  • routing_log           │
+          │  • policy_violations     │
+          │  • token_budget / used   │
+          └──────────┬──────────────┘
+                     │
+                     ▼
+          ┌─────────────────────────┐
+          │         TOOLS           │
+          │  1. web_search (stub)   │
+          │  2. code_executor       │
+          │  3. data_lookup (NL→SQL)│
+          │  4. self_reflection     │
+          │                         │
+          │  Each has:              │
+          │  • timeout contract     │
+          │  • empty contract       │
+          │  • malformed contract   │
+          │  • ≤2 retry with log    │
+          └──────────┬──────────────┘
+                     │
+                     ▼
+  ┌─────────────────────────────────────────────────────────────┐
+  │                      DATABASE (SQLite)                       │
+  │  jobs │ execution_log │ tool_calls │ eval_runs              │
+  │  eval_results │ prompt_rewrites │ prompt_rewrite_evals      │
+  └──────────────────────────────────────────────────────────────┘
+                     │
+           ┌─────────┴──────────┐
+           ▼                    ▼
+  ┌─────────────────┐  ┌───────────────────────────────────────┐
+  │  EVAL HARNESS   │  │       META AGENT (Self-Improve)        │
+  │  15 test cases: │  │  After each eval run:                  │
+  │  • 5 straight   │  │  • Reads failure cases                 │
+  │  • 5 ambiguous  │  │  • Identifies worst prompt/dimension   │
+  │  • 5 adversarial│  │  • Proposes rewrite with diff          │
+  │                 │  │  • Stores (NOT auto-applied)           │
+  │  6 score dims:  │  │  • Human approves via API              │
+  │  • correctness  │  │  • Re-eval on failed cases only        │
+  │  • citation     │  │  • Delta stored with timestamps        │
+  │  • contradiction│  └───────────────────────────────────────┘
+  │  • tool_effic.  │
+  │  • budget       │  ┌───────────────────────────────────────┐
+  │  • critique_agr │  │  LOG QUERY INTERFACE  (port 8001)      │
+  └─────────────────┘  │  • Web UI for querying execution logs  │
+                       │  • Filter by job_id, event_type, agent │
+                       │  • View policy violations              │
+                       └───────────────────────────────────────┘
+
+══════════════════════════════════════════════════════════════════
+
+DATA FLOW FOR A SINGLE QUERY:
+
+  1. Client → POST /query
+  2. Orchestrator creates SharedContext (job_id, original_query)
+  3. Router LLM decides: run DECOMPOSITION first
+  4. Decomposition → subtasks with dependency graph → SharedContext
+  5. Router decides: RETRIEVAL for each pending subtask
+  6. Retrieval → multi-hop RAG (≥2 chunks) → claims with chunk citations
+  7. Tools called (web_search, etc.) with retry logic
+  8. Router decides: CRITIQUE
+  9. Critique → per-claim confidence scores, flags specific spans
+  10. Router decides: SYNTHESIS
+  11. Synthesis → resolves contradictions → final answer + provenance map
+  12. Router decides: DONE
+  13. SharedContext serialized → DB
+  14. SSE stream closes with final answer
+
+══════════════════════════════════════════════════════════════════

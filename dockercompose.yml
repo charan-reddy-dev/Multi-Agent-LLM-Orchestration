@@ -1,0 +1,75 @@
+version: "3.9"
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: uvicorn api.main:app --host 0.0.0.0 --port 8000 --reload
+    ports:
+      - "8000:8000"
+    environment:
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - DB_PATH=/app/data/agent_store.db
+      - WORKER_POLL_INTERVAL=5
+    volumes:
+      - agent_data:/app/data
+    depends_on:
+      - db
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: python -m worker.worker
+    environment:
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - DB_PATH=/app/data/agent_store.db
+      - WORKER_POLL_INTERVAL=5
+    volumes:
+      - agent_data:/app/data
+    depends_on:
+      - db
+    restart: unless-stopped
+
+  db:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER:-agentuser}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-agentpass}
+      - POSTGRES_DB=${POSTGRES_DB:-agentdb}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-agentuser}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  log_interface:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: uvicorn logs.log_interface:app --host 0.0.0.0 --port 8001 --reload
+    ports:
+      - "8001:8001"
+    environment:
+      - DB_PATH=/app/data/agent_store.db
+    volumes:
+      - agent_data:/app/data
+    depends_on:
+      - db
+    restart: unless-stopped
+
+volumes:
+  agent_data:
+  postgres_data:
