@@ -1,8 +1,8 @@
 {
   "benchmark": "pevr-eval",
   "version": 1,
-  "started_at_utc": "2026-11-18T13:49:15+00:00",
-  "git_commit": "9d7c422",
+  "started_at_utc": "2026-11-18T13:50:41+00:00",
+  "git_commit": "e401a26",
   "command": "python benchmarks/eval_pevr.py ",
   "environment": {
     "python": "3.14.7",
@@ -55,11 +55,19 @@
         "violations_first_draft_by_code": {},
         "violations_final_by_code": {}
       },
+      "fault_detection": {
+        "faults_injected_by_type": {},
+        "nodes_with_injected_fault": 0,
+        "detected": 0,
+        "flagged_without_injected_fault": 0,
+        "detection_rate": null,
+        "note": "first-draft executor faults injected by the mock vs. nodes the Verifier flagged; empty for live providers, which have no ground truth"
+      },
       "latency_ms": {
-        "mean": 0.966,
-        "p50": 0.846,
-        "p95": 1.173,
-        "max": 2.638
+        "mean": 0.99,
+        "p50": 0.891,
+        "p95": 1.174,
+        "max": 2.736
       },
       "llm_calls_per_case_mean": 3.4,
       "per_case": [
@@ -77,7 +85,7 @@
           "final_passed": true,
           "refinements": 0,
           "llm_calls": 4,
-          "latency_ms": 2.638,
+          "latency_ms": 2.736,
           "final_violations": []
         },
         {
@@ -94,7 +102,7 @@
           "final_passed": true,
           "refinements": 0,
           "llm_calls": 4,
-          "latency_ms": 1.093,
+          "latency_ms": 1.102,
           "final_violations": []
         },
         {
@@ -111,7 +119,7 @@
           "final_passed": true,
           "refinements": 0,
           "llm_calls": 4,
-          "latency_ms": 1.106,
+          "latency_ms": 1.161,
           "final_violations": []
         },
         {
@@ -128,7 +136,7 @@
           "final_passed": true,
           "refinements": 0,
           "llm_calls": 5,
-          "latency_ms": 1.173,
+          "latency_ms": 1.174,
           "final_violations": []
         },
         {
@@ -145,7 +153,7 @@
           "final_passed": true,
           "refinements": 0,
           "llm_calls": 5,
-          "latency_ms": 1.129,
+          "latency_ms": 1.139,
           "final_violations": []
         },
         {
@@ -162,7 +170,7 @@
           "final_passed": true,
           "refinements": 0,
           "llm_calls": 4,
-          "latency_ms": 0.953,
+          "latency_ms": 0.97,
           "final_violations": []
         },
         {
@@ -182,7 +190,7 @@
           "final_passed": true,
           "refinements": 0,
           "llm_calls": 3,
-          "latency_ms": 0.904,
+          "latency_ms": 0.917,
           "final_violations": []
         },
         {
@@ -199,7 +207,7 @@
           "final_passed": true,
           "refinements": 0,
           "llm_calls": 3,
-          "latency_ms": 0.882,
+          "latency_ms": 0.947,
           "final_violations": []
         },
         {
@@ -219,7 +227,7 @@
           "final_passed": true,
           "refinements": 0,
           "llm_calls": 3,
-          "latency_ms": 0.899,
+          "latency_ms": 0.911,
           "final_violations": []
         },
         {
@@ -238,7 +246,7 @@
           "final_passed": true,
           "refinements": 0,
           "llm_calls": 3,
-          "latency_ms": 0.918,
+          "latency_ms": 0.929,
           "final_violations": []
         },
         {
@@ -258,7 +266,7 @@
           "final_passed": true,
           "refinements": 0,
           "llm_calls": 3,
-          "latency_ms": 0.846,
+          "latency_ms": 0.891,
           "final_violations": []
         },
         {
@@ -275,7 +283,7 @@
           "final_passed": true,
           "refinements": 0,
           "llm_calls": 3,
-          "latency_ms": 0.758,
+          "latency_ms": 0.781,
           "final_violations": []
         },
         {
@@ -292,7 +300,7 @@
           "final_passed": true,
           "refinements": 0,
           "llm_calls": 3,
-          "latency_ms": 0.724,
+          "latency_ms": 0.748,
           "final_violations": []
         },
         {
@@ -309,7 +317,7 @@
           "final_passed": true,
           "refinements": 0,
           "llm_calls": 3,
-          "latency_ms": 0.783,
+          "latency_ms": 0.795,
           "final_violations": []
         },
         {
@@ -328,7 +336,7 @@
           "final_passed": true,
           "refinements": 0,
           "llm_calls": 3,
-          "latency_ms": 0.721,
+          "latency_ms": 0.743,
           "final_violations": []
         },
         {
@@ -347,7 +355,7 @@
           "final_passed": true,
           "refinements": 0,
           "llm_calls": 3,
-          "latency_ms": 0.708,
+          "latency_ms": 0.733,
           "final_violations": []
         },
         {
@@ -364,7 +372,7 @@
           "final_passed": true,
           "refinements": 0,
           "llm_calls": 3,
-          "latency_ms": 0.807,
+          "latency_ms": 0.804,
           "final_violations": []
         },
         {
@@ -381,7 +389,7 @@
           "final_passed": true,
           "refinements": 0,
           "llm_calls": 3,
-          "latency_ms": 0.779,
+          "latency_ms": 0.75,
           "final_violations": []
         },
         {
@@ -398,7 +406,7 @@
           "final_passed": true,
           "refinements": 0,
           "llm_calls": 3,
-          "latency_ms": 0.676,
+          "latency_ms": 0.729,
           "final_violations": []
         },
         {
@@ -415,7 +423,7 @@
           "final_passed": true,
           "refinements": 0,
           "llm_calls": 3,
-          "latency_ms": 0.827,
+          "latency_ms": 0.843,
           "final_violations": []
         }
       ],
@@ -482,11 +490,27 @@
           "schema_violation": 1
         }
       },
+      "fault_detection": {
+        "faults_injected_by_type": {
+          "alter_number": 2,
+          "constraint_break": 3,
+          "drop_anchor": 14,
+          "invalid_plan": 2,
+          "regression": 2,
+          "repair_incomplete": 9,
+          "schema_break": 4
+        },
+        "nodes_with_injected_fault": 20,
+        "detected": 20,
+        "flagged_without_injected_fault": 0,
+        "detection_rate": 1.0,
+        "note": "first-draft executor faults injected by the mock vs. nodes the Verifier flagged; empty for live providers, which have no ground truth"
+      },
       "latency_ms": {
-        "mean": 1.225,
-        "p50": 1.115,
-        "p95": 2.101,
-        "max": 2.442
+        "mean": 1.114,
+        "p50": 1.06,
+        "p95": 1.701,
+        "max": 2.146
       },
       "llm_calls_per_case_mean": 4.7,
       "per_case": [
@@ -504,7 +528,7 @@
           "final_passed": true,
           "refinements": 2,
           "llm_calls": 6,
-          "latency_ms": 1.728,
+          "latency_ms": 1.701,
           "final_violations": []
         },
         {
@@ -521,7 +545,7 @@
           "final_passed": true,
           "refinements": 1,
           "llm_calls": 5,
-          "latency_ms": 1.279,
+          "latency_ms": 1.115,
           "final_violations": []
         },
         {
@@ -538,7 +562,7 @@
           "final_passed": true,
           "refinements": 3,
           "llm_calls": 7,
-          "latency_ms": 1.597,
+          "latency_ms": 1.523,
           "final_violations": []
         },
         {
@@ -555,7 +579,7 @@
           "final_passed": true,
           "refinements": 1,
           "llm_calls": 6,
-          "latency_ms": 1.592,
+          "latency_ms": 1.494,
           "final_violations": []
         },
         {
@@ -572,7 +596,7 @@
           "final_passed": true,
           "refinements": 0,
           "llm_calls": 5,
-          "latency_ms": 1.115,
+          "latency_ms": 1.016,
           "final_violations": []
         },
         {
@@ -589,7 +613,7 @@
           "final_passed": true,
           "refinements": 2,
           "llm_calls": 6,
-          "latency_ms": 1.242,
+          "latency_ms": 1.174,
           "final_violations": []
         },
         {
@@ -609,7 +633,7 @@
           "final_passed": true,
           "refinements": 2,
           "llm_calls": 5,
-          "latency_ms": 1.057,
+          "latency_ms": 1.024,
           "final_violations": []
         },
         {
@@ -626,7 +650,7 @@
           "final_passed": true,
           "refinements": 2,
           "llm_calls": 5,
-          "latency_ms": 1.126,
+          "latency_ms": 1.171,
           "final_violations": []
         },
         {
@@ -646,7 +670,7 @@
           "final_passed": true,
           "refinements": 0,
           "llm_calls": 3,
-          "latency_ms": 0.691,
+          "latency_ms": 0.682,
           "final_violations": []
         },
         {
@@ -665,7 +689,7 @@
           "final_passed": true,
           "refinements": 0,
           "llm_calls": 3,
-          "latency_ms": 2.101,
+          "latency_ms": 2.146,
           "final_violations": []
         },
         {
@@ -685,7 +709,7 @@
           "final_passed": true,
           "refinements": 1,
           "llm_calls": 4,
-          "latency_ms": 2.442,
+          "latency_ms": 1.072,
           "final_violations": []
         },
         {
@@ -702,7 +726,7 @@
           "final_passed": false,
           "refinements": 2,
           "llm_calls": 5,
-          "latency_ms": 1.096,
+          "latency_ms": 1.06,
           "final_violations": [
             {
               "code": "missing_anchor",
@@ -725,7 +749,7 @@
           "final_passed": true,
           "refinements": 0,
           "llm_calls": 3,
-          "latency_ms": 0.565,
+          "latency_ms": 0.58,
           "final_violations": []
         },
         {
@@ -742,7 +766,7 @@
           "final_passed": true,
           "refinements": 2,
           "llm_calls": 5,
-          "latency_ms": 0.992,
+          "latency_ms": 0.974,
           "final_violations": []
         },
         {
@@ -761,7 +785,7 @@
           "final_passed": true,
           "refinements": 3,
           "llm_calls": 6,
-          "latency_ms": 1.174,
+          "latency_ms": 1.224,
           "final_violations": []
         },
         {
@@ -780,7 +804,7 @@
           "final_passed": true,
           "refinements": 3,
           "llm_calls": 6,
-          "latency_ms": 1.516,
+          "latency_ms": 1.503,
           "final_violations": []
         },
         {
@@ -797,7 +821,7 @@
           "final_passed": true,
           "refinements": 1,
           "llm_calls": 4,
-          "latency_ms": 0.927,
+          "latency_ms": 0.793,
           "final_violations": []
         },
         {
@@ -814,7 +838,7 @@
           "final_passed": true,
           "refinements": 0,
           "llm_calls": 3,
-          "latency_ms": 0.638,
+          "latency_ms": 0.626,
           "final_violations": []
         },
         {
@@ -831,7 +855,7 @@
           "final_passed": true,
           "refinements": 1,
           "llm_calls": 4,
-          "latency_ms": 0.789,
+          "latency_ms": 0.764,
           "final_violations": []
         },
         {
@@ -848,7 +872,7 @@
           "final_passed": true,
           "refinements": 0,
           "llm_calls": 3,
-          "latency_ms": 0.829,
+          "latency_ms": 0.63,
           "final_violations": []
         }
       ],

@@ -5,7 +5,7 @@ records anchor extraction recall, DAG validity, anchor retention, schema complia
 satisfaction and fidelity (first draft vs. after refinement), retry convergence and latency.
 
     python benchmarks/eval_pevr.py                                    # offline mock, both fault profiles
-    python benchmarks/eval_pevr.py --provider groq,gemini --profiles live
+    python benchmarks/eval_pevr.py --provider groq,gemini --output benchmarks/results-live.json
 
 With the mock provider, the "none" profile is a sanity baseline and "benchmark" injects the fault
 rates documented in src/providers/mock.py. Those results measure how well the Verifier detects and the
