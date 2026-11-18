@@ -1,0 +1,142 @@
+[
+  {
+    "id": "ms-01",
+    "category": "multi_step",
+    "query": "Compare Redis Streams and Apache Kafka for a team processing 10,000 RPS with a p99 budget of 50 ms, then recommend one for the payments team.",
+    "expected_anchors": ["10,000 RPS", "50 ms", "Redis Streams", "Apache Kafka", "p99"],
+    "expect_dependency": true
+  },
+  {
+    "id": "ms-02",
+    "category": "multi_step",
+    "query": "Estimate the monthly cost of running 12 nodes on AWS at $0.34 per hour each, then compare it with a 3 nodes setup on Google Cloud.",
+    "expected_anchors": ["12 nodes", "$0.34", "3 nodes", "AWS", "Google Cloud"],
+    "expect_dependency": true
+  },
+  {
+    "id": "ms-03",
+    "category": "multi_step",
+    "query": "Summarize why General Motors cut LLM latency by 36% from 2.5 s to 1.6 s. Then explain which of INT8 quantization or prompt caching contributed more.",
+    "expected_anchors": ["36%", "2.5 s", "1.6 s", "General Motors", "LLM", "INT8"],
+    "expect_dependency": true
+  },
+  {
+    "id": "ms-04",
+    "category": "multi_step",
+    "query": "Review the incident where PostgreSQL replication lag reached 45 seconds for 3 replicas. Identify the root cause, then propose two mitigations for the SRE team.",
+    "expected_anchors": ["45 seconds", "3 replicas", "PostgreSQL", "SRE"],
+    "expect_dependency": true
+  },
+  {
+    "id": "ms-05",
+    "category": "multi_step",
+    "query": "Our churn rose from 4.1% to 6.3% in Q3 2025 after the pricing change. Analyze likely drivers, then recommend retention actions for Enterprise customers.",
+    "expected_anchors": ["4.1%", "6.3%", "Q3 2025", "Enterprise"],
+    "expect_dependency": true
+  },
+  {
+    "id": "ms-06",
+    "category": "multi_step",
+    "query": "Assess migrating 250 microservices from Jenkins to GitHub Actions. Then outline a rollout plan across 4 quarters.",
+    "expected_anchors": ["250", "Jenkins", "GitHub Actions", "4 quarters"],
+    "expect_dependency": true
+  },
+  {
+    "id": "ap-01",
+    "category": "anchor_preservation",
+    "query": "Write a status update: RaftKV elected a new leader in 180 ms after node 2 failed, and the 5 nodes cluster kept serving writes with 2 failures tolerated.",
+    "expected_anchors": ["180 ms", "5 nodes", "RaftKV"],
+    "expect_dependency": false
+  },
+  {
+    "id": "ap-02",
+    "category": "anchor_preservation",
+    "query": "Summarize the quarter: revenue was $4.2M across 3 regions, EMEA grew 18% and APAC grew 9%, with 1,240 customers in total.",
+    "expected_anchors": ["$4.2M", "3 regions", "18%", "9%", "1,240 customers", "EMEA", "APAC"],
+    "expect_dependency": false
+  },
+  {
+    "id": "ap-03",
+    "category": "anchor_preservation",
+    "query": "Describe the FeatureHub benchmark: Redis online lookup at 0.77 ms p50 and 1.62 ms p99, with 122 registered features.",
+    "expected_anchors": ["0.77 ms", "1.62 ms", "122", "FeatureHub", "Redis"],
+    "expect_dependency": false
+  },
+  {
+    "id": "ap-04",
+    "category": "anchor_preservation",
+    "query": "Explain the TicketLens result: TF-IDF scored 0.8352 macro-F1 versus 0.7790 for DistilBERT on 3,563 test tickets.",
+    "expected_anchors": ["0.8352", "0.7790", "3,563", "TicketLens", "TF-IDF", "DistilBERT"],
+    "expect_dependency": false
+  },
+  {
+    "id": "ap-05",
+    "category": "anchor_preservation",
+    "query": "Draft a release note: OctoScale served 2,404.8 req/s with p99 of 219.874 ms on 6 workers using PostgreSQL and Redis.",
+    "expected_anchors": ["2,404.8 req/s", "219.874 ms", "OctoScale", "PostgreSQL", "Redis"],
+    "expect_dependency": false
+  },
+  {
+    "id": "ap-06",
+    "category": "anchor_preservation",
+    "query": "Report that the Mumbai region processed 3.5M events per day at 99.95% availability while the Frankfurt region handled 2.1M.",
+    "expected_anchors": ["3.5M", "99.95%", "2.1M", "Mumbai", "Frankfurt"],
+    "expect_dependency": false
+  },
+  {
+    "id": "sc-01",
+    "category": "constraint_following",
+    "query": "Recommend a vector database for 500K embeddings with a 92% recall target in under 60 words.",
+    "expected_anchors": ["500K", "92%", "under 60 words"],
+    "expect_dependency": false
+  },
+  {
+    "id": "sc-02",
+    "category": "constraint_following",
+    "query": "List the risks of moving Spark jobs to Databricks for a 40 TB lakehouse in exactly 3 bullet points.",
+    "expected_anchors": ["40 TB", "Spark", "Databricks", "exactly 3 bullet points"],
+    "expect_dependency": false
+  },
+  {
+    "id": "sc-03",
+    "category": "constraint_following",
+    "query": "Propose a caching strategy for an API serving 8,000 RPS with a 20 ms latency target and do not mention Memcached.",
+    "expected_anchors": ["8,000 RPS", "20 ms", "do not mention Memcached"],
+    "expect_dependency": false
+  },
+  {
+    "id": "sc-04",
+    "category": "constraint_following",
+    "query": "Explain the trade-offs of LangGraph versus a custom DAG executor for 6 agents in under 80 words and without mentioning CrewAI.",
+    "expected_anchors": ["6 agents", "LangGraph", "under 80 words", "without mentioning CrewAI"],
+    "expect_dependency": false
+  },
+  {
+    "id": "sc-05",
+    "category": "constraint_following",
+    "query": "Give the go-live checklist for the Kubernetes upgrade to 1.31 on 9 clusters in exactly 4 bullet points.",
+    "expected_anchors": ["1.31", "9 clusters", "Kubernetes", "exactly 4 bullet points"],
+    "expect_dependency": false
+  },
+  {
+    "id": "sc-06",
+    "category": "constraint_following",
+    "query": "Summarize the A/B test where conversion rose from 3.2% to 3.9% with 48,000 users per arm, in under 50 words and do not mention Optimizely.",
+    "expected_anchors": ["3.2%", "3.9%", "48,000 users", "under 50 words", "do not mention Optimizely"],
+    "expect_dependency": false
+  },
+  {
+    "id": "sc-07",
+    "category": "constraint_following",
+    "query": "Describe how DriveDocs reached 0.924 citation precision on 39 questions in exactly 2 bullet points.",
+    "expected_anchors": ["0.924", "39", "DriveDocs", "exactly 2 bullet points"],
+    "expect_dependency": false
+  },
+  {
+    "id": "sc-08",
+    "category": "constraint_following",
+    "query": "Recommend an inference stack for serving Llama 3 70B at 1,500 tokens per second on 8 GPUs in under 70 words.",
+    "expected_anchors": ["1,500 tokens", "8 GPUs", "Llama 3 70B", "under 70 words"],
+    "expect_dependency": false
+  }
+]
