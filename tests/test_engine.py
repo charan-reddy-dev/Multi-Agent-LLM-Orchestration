@@ -89,3 +89,6 @@ def test_eval_smoke(tmp_path):
     assert set(result["runs"]) == {"none", "benchmark"}
     clean = result["runs"]["none"]
     assert clean["cases"] == 2 and clean["final_report"]["verified_pass_rate_final"] == 1.0
+    faulty = result["runs"]["benchmark"]["fault_detection"]
+    assert faulty["detected"] == faulty["nodes_with_injected_fault"]
+    assert faulty["flagged_without_injected_fault"] == 0

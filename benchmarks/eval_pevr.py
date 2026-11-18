@@ -56,6 +56,8 @@ def anchor_found(expected: str, extracted: list[str]) -> bool:
 async def run_profile(cases: list[dict], router_factory, max_retries: int) -> dict:
     per_case = []
     reports: list[tuple[dict, Report]] = []
+    detection = {"nodes_with_injected_fault": 0, "detected": 0, "flagged_without_injected_fault": 0}
+    injected_by_type: dict[str, int] = {}
     for case in cases:
         router = router_factory()
         engine = PEVREngine(router, max_retries=max_retries)
@@ -63,6 +65,16 @@ async def run_profile(cases: list[dict], router_factory, max_retries: int) -> di
         report = await engine.run(case["query"])
         elapsed = (time.perf_counter() - start) * 1000
         reports.append((case, report))
+
+        # Ground truth from the mock (absent for live providers): which first drafts really had a fault.
+        injected = [x for p in router.providers for x in getattr(p, "injected", [])]
+        for _, _, _, fault in injected:
+            injected_by_type[fault] = injected_by_type.get(fault, 0) + 1
+        faulty = {tid for role, tid, attempt, _ in injected if role == "executor" and attempt == 0}
+        flagged_ids = {tid for tid, n in report.nodes.items() if not n.first_verdict.passed}
+        detection["nodes_with_injected_fault"] += len(faulty)
+        detection["detected"] += len(faulty & flagged_ids)
+        detection["flagged_without_injected_fault"] += len(flagged_ids - faulty)
         synth = report.nodes[report.plan.synthesis.id]
         extracted = [a.text for a in report.plan.anchors]
         per_case.append({
@@ -141,6 +153,13 @@ async def run_profile(cases: list[dict], router_factory, max_retries: int) -> di
             "violations_first_draft_by_code": _count_codes(n.first_verdict for n in nodes),
             "violations_final_by_code": _count_codes(n.final_verdict for n in nodes),
         },
+        "fault_detection": {
+            "faults_injected_by_type": dict(sorted(injected_by_type.items())),
+            **detection,
+            "detection_rate": ratio(detection["detected"], detection["nodes_with_injected_fault"]),
+            "note": "first-draft executor faults injected by the mock vs. nodes the Verifier flagged; "
+                    "empty for live providers, which have no ground truth",
+        },
         "latency_ms": {
             "mean": round(statistics.fmean(latencies), 3),
             "p50": round(percentile(latencies, 50), 3),
@@ -214,6 +233,7 @@ def main() -> None:
               f"retention first/final {fr['anchor_retention_first_draft']}/{fr['anchor_retention_final']}  "
               f"pass first/final {fr['verified_pass_rate_first_draft']}/{fr['verified_pass_rate_final']}  "
               f"convergence {rf['retry_convergence_rate']} ({rf['nodes_converged']}/{rf['nodes_flagged_on_first_draft']})  "
+              f"detection {r['fault_detection']['detection_rate']}  "
               f"latency mean {r['latency_ms']['mean']} ms")
     print(f"wrote {args.output}")
 

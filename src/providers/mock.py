@@ -68,6 +68,11 @@ class MockProvider:
         self.faults = faults or FaultProfile.none()
         self.seed = seed
         self.model = "deterministic-v1" if self.faults == FaultProfile.none() else "deterministic-faulty-v1"
+        # Ground truth for the benchmark: (role, task_id, attempt, fault) for every fault actually injected.
+        self.injected: list[tuple[str, str, int, str]] = []
+
+    def _inject(self, request: LLMRequest, fault: str) -> None:
+        self.injected.append((request.role, request.task_id, request.attempt, fault))
 
     def _rng(self, request: LLMRequest, payload: dict, salt: str = "") -> random.Random:
         key = f"{self.seed}|{request.role}|{request.task_id}|{request.attempt}|{payload.get('query', '')}|{salt}"
@@ -98,6 +103,7 @@ class MockProvider:
                       "depends_on": [t["id"] for t in items], "anchor_ids": [a["id"] for a in payload["anchors"]]})
         if self._rng(request, payload).random() < self.faults.invalid_plan:
             items[0]["depends_on"] = [items[-1]["id"]]  # cycle: t1 -> synthesis -> t1
+            self._inject(request, "invalid_plan")
         return json.dumps({"tasks": items})
 
     # ------------------------------------------------------------------ executor
@@ -135,12 +141,16 @@ class MockProvider:
         altered: set[str] = set()
         if anchors and rng.random() < f.drop_anchor:
             drop.add(rng.choice(anchors)["id"])
+            self._inject(request, "drop_anchor")
         if numbers and rng.random() < f.alter_number:
             altered.add(rng.choice(numbers)["id"])
+            self._inject(request, "alter_number")
         out = self._clean(payload, drop, altered)
         if payload["task"]["kind"] == "synthesis" and payload.get("constraints") and rng.random() < f.constraint_break:
             out["content"] = self._break_constraint(out["content"], rng.choice(payload["constraints"]))
+            self._inject(request, "constraint_break")
         if rng.random() < f.schema_break:
+            self._inject(request, "schema_break")
             return self._break_schema(out, rng)
         return json.dumps(out)
 
@@ -188,6 +198,9 @@ class MockProvider:
         others = [a for a in payload["required_anchors"] if a["id"] not in drop]
         if others and rng.random() < f.regression:
             drop.add(rng.choice(others)["id"])
+            self._inject(request, "regression")
+        if drop or keep_numbers or keep_constraints or schema_unfixed:
+            self._inject(request, "repair_incomplete")
         out = self._clean(payload, drop, set())
         for n in keep_numbers:
             out["content"] += f" (earlier draft: {n})"
