@@ -121,7 +121,8 @@ class MockProvider:
                     content += " This combines " + ", ".join(sorted(payload["upstream"])) + "."
             title = "Final answer"
         else:
-            content = task["instruction"].rstrip(".") + ". Facts used: " + ("; ".join(texts) if texts else "none") + "."
+            # Never echo the instruction: it quotes the query, so a dropped anchor would still appear verbatim.
+            content = f"Findings for step {task['id']}. Facts used: " + ("; ".join(texts) if texts else "none") + "."
             title = f"Step {task['id']}"
         return {"title": title, "content": content, "anchors_used": used}
 

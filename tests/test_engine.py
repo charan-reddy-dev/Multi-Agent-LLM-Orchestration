@@ -43,9 +43,10 @@ async def test_anchors_are_immutable_across_the_run():
 
 async def test_faults_are_detected_and_repaired():
     report = await engine(FaultProfile(drop_anchor=1.0, alter_number=1.0, fix=1.0)).run(QUERY)
-    synth = report.nodes[report.plan.synthesis.id]
-    assert not synth.first_verdict.passed
-    assert synth.final_verdict.passed and synth.refinements >= 1
+    for node in report.nodes.values():
+        if report.plan.task(node.task_id).anchor_ids:
+            assert not node.first_verdict.passed, f"{node.task_id}: injected fault went undetected"
+            assert node.final_verdict.passed and node.refinements >= 1
 
 
 async def test_refinement_stops_at_max_retries_when_repairs_fail():
